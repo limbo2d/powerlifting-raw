@@ -1,0 +1,1196 @@
+<!DOCTYPE html>  
+<html lang="ru">  
+<head>  
+  <meta charset="UTF-8">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">  
+  <meta name="apple-mobile-web-app-capable" content="yes">  
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">  
+  <meta name="apple-mobile-web-app-title" content="True Raw V2">  
+  <meta name="theme-color" content="#000000">  
+  <title>Цикл V2 · Perkins Polarized</title>  
+  <style>  
+    :root {  
+      --bg: #000000;  
+      --card: #151518;  
+      --card-elevated: #222227;  
+      --border: #2E2E34;  
+      --text: #FFFFFF;  
+      --text-sec: #9898A0;  
+      --accent: #FF453A;  
+      --accent-soft: rgba(255, 69, 58, 0.16);  
+      --blue: #0A84FF;  
+      --blue-soft: rgba(10, 132, 255, 0.16);  
+      --purple: #BF5AF2;  
+      --purple-soft: rgba(191, 90, 242, 0.16);  
+      --green: #30D158;  
+      --amber: #FFD60A;  
+      --safe-top: env(safe-area-inset-top, 44px);  
+      --safe-bottom: env(safe-area-inset-bottom, 24px);  
+    }  
+  
+    * {  
+      box-sizing: border-box;  
+      margin: 0;  
+      padding: 0;  
+      -webkit-tap-highlight-color: transparent;  
+    }  
+  
+    body {  
+      background-color: var(--bg);  
+      color: var(--text);  
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;  
+      padding-top: calc(var(--safe-top) + 8px);  
+      padding-bottom: calc(var(--safe-bottom) + 140px);  
+      line-height: 1.4;  
+      overflow-x: hidden;  
+      -webkit-user-select: none;  
+      user-select: none;  
+    }  
+  
+    input, textarea {  
+      -webkit-user-select: text;  
+      user-select: text;  
+      font-family: inherit;  
+    }  
+  
+    .app-header {  
+      padding: 10px 16px 12px;  
+      display: flex;  
+      justify-content: space-between;  
+      align-items: center;  
+      position: sticky;  
+      top: 0;  
+      z-index: 50;  
+      background: rgba(0, 0, 0, 0.86);  
+      backdrop-filter: blur(20px);  
+      -webkit-backdrop-filter: blur(20px);  
+      border-bottom: 1px solid var(--border);  
+    }  
+    .header-title h1 {  
+      font-size: 19px;  
+      font-weight: 800;  
+      letter-spacing: -0.4px;  
+    }  
+    .save-status {  
+      font-size: 11px;  
+      color: var(--green);  
+      font-weight: 600;  
+    }  
+    .icon-btn {  
+      background: var(--card-elevated);  
+      border: 1px solid var(--border);  
+      color: var(--text);  
+      padding: 8px 12px;  
+      border-radius: 10px;  
+      font-size: 12px;  
+      font-weight: 700;  
+      cursor: pointer;  
+      touch-action: manipulation;  
+    }  
+    .icon-btn:active {  
+      opacity: 0.7;  
+      transform: scale(0.97);  
+    }  
+  
+    .container {  
+      padding: 14px 14px 0;  
+      max-width: 540px;  
+      margin: 0 auto;  
+    }  
+  
+    .segmented-row {  
+      display: grid;  
+      grid-template-columns: repeat(4, 1fr);  
+      background: var(--card);  
+      padding: 4px;  
+      border-radius: 12px;  
+      margin-bottom: 10px;  
+      border: 1px solid var(--border);  
+      gap: 4px;  
+    }  
+    .seg-btn {  
+      background: transparent;  
+      border: none;  
+      color: var(--text-sec);  
+      padding: 8px 2px;  
+      border-radius: 9px;  
+      font-size: 13px;  
+      font-weight: 700;  
+      cursor: pointer;  
+      text-align: center;  
+      touch-action: manipulation;  
+    }  
+    .seg-btn span {  
+      display: block;  
+      font-size: 10px;  
+      font-weight: 500;  
+      opacity: 0.85;  
+      margin-top: 1px;  
+    }  
+    .seg-btn.active {  
+      background: var(--card-elevated);  
+      color: var(--text);  
+    }  
+    .seg-btn.active.w-active {  
+      background: var(--accent);  
+      color: #fff;  
+    }  
+  
+    .week-banner {  
+      background: linear-gradient(145deg, #1E1E24 0%, #131316 100%);  
+      border: 1px solid var(--border);  
+      border-radius: 16px;  
+      padding: 14px 16px;  
+      margin-bottom: 14px;  
+    }  
+    .week-banner-top {  
+      display: flex;  
+      justify-content: space-between;  
+      align-items: center;  
+      margin-bottom: 6px;  
+    }  
+    .week-badge {  
+      font-size: 11px;  
+      font-weight: 700;  
+      text-transform: uppercase;  
+      padding: 3px 8px;  
+      border-radius: 6px;  
+      background: var(--accent-soft);  
+      color: var(--accent);  
+    }  
+    .week-banner h2 {  
+      font-size: 16px;  
+      font-weight: 800;  
+      margin-bottom: 3px;  
+    }  
+    .week-banner p {  
+      font-size: 12px;  
+      color: var(--text-sec);  
+    }  
+  
+    .progress-wrap {  
+      margin-top: 10px;  
+      display: flex;  
+      align-items: center;  
+      gap: 10px;  
+    }  
+    .progress-bar-bg {  
+      flex: 1;  
+      height: 7px;  
+      background: var(--card-elevated);  
+      border-radius: 4px;  
+      overflow: hidden;  
+    }  
+    .progress-bar-fill {  
+      height: 100%;  
+      background: var(--green);  
+      width: 0%;  
+      transition: width 0.25s ease;  
+    }  
+    .progress-text {  
+      font-size: 12px;  
+      color: var(--text);  
+      font-weight: 700;  
+      min-width: 38px;  
+      text-align: right;  
+    }  
+  
+    .ex-card {  
+      background: var(--card);  
+      border: 1px solid var(--border);  
+      border-radius: 16px;  
+      padding: 14px;  
+      margin-bottom: 12px;  
+    }  
+    .ex-card.done-card {  
+      border-color: rgba(48, 209, 88, 0.5);  
+      background: rgba(20, 30, 23, 0.85);  
+    }  
+    .ex-header {  
+      display: flex;  
+      justify-content: space-between;  
+      align-items: flex-start;  
+      gap: 8px;  
+      margin-bottom: 10px;  
+    }  
+    .ex-title {  
+      font-size: 15.5px;  
+      font-weight: 800;  
+    }  
+    .ex-tag {  
+      font-size: 10.5px;  
+      font-weight: 700;  
+      padding: 3px 8px;  
+      border-radius: 6px;  
+      white-space: nowrap;  
+    }  
+    .tag-top { background: var(--accent-soft); color: var(--accent); }  
+    .tag-bo { background: var(--blue-soft); color: var(--blue); }  
+    .tag-asc { background: var(--purple-soft); color: var(--purple); }  
+    .tag-acc { background: rgba(255,255,255,0.08); color: var(--text-sec); }  
+  
+    .ex-metrics {  
+      display: grid;  
+      grid-template-columns: repeat(4, 1fr);  
+      gap: 6px;  
+      background: rgba(0,0,0,0.4);  
+      padding: 9px;  
+      border-radius: 12px;  
+      margin-bottom: 10px;  
+    }  
+    .metric-box {  
+      text-align: center;  
+    }  
+    .metric-label {  
+      font-size: 9.5px;  
+      color: var(--text-sec);  
+      text-transform: uppercase;  
+      display: block;  
+    }  
+    .metric-val {  
+      font-size: 13.5px;  
+      font-weight: 800;  
+      margin-top: 2px;  
+      display: block;  
+    }  
+    .metric-val.highlight {  
+      color: var(--amber);  
+    }  
+  
+    .ex-note {  
+      font-size: 12px;  
+      color: var(--text-sec);  
+      margin-bottom: 10px;  
+      padding-left: 8px;  
+      border-left: 2px solid var(--border);  
+    }  
+  
+    .fact-log-row {  
+      display: grid;  
+      grid-template-columns: 1fr 1fr;  
+      gap: 8px;  
+      margin-bottom: 10px;  
+    }  
+    .fact-input-wrap {  
+      background: var(--card-elevated);  
+      border: 1px solid var(--border);  
+      border-radius: 10px;  
+      padding: 6px 10px;  
+      display: flex;  
+      align-items: center;  
+      justify-content: space-between;  
+    }  
+    .fact-input-wrap label {  
+      font-size: 11px;  
+      color: var(--text-sec);  
+      font-weight: 600;  
+    }  
+    .fact-input-wrap input {  
+      width: 72px;  
+      background: transparent;  
+      border: none;  
+      color: var(--amber);  
+      font-size: 14px;  
+      font-weight: 800;  
+      text-align: right;  
+      outline: none;  
+    }  
+  
+    .warmup-toggle {  
+      background: var(--blue-soft);  
+      border: none;  
+      color: var(--blue);  
+      padding: 6px 10px;  
+      border-radius: 8px;  
+      font-size: 12px;  
+      font-weight: 700;  
+      cursor: pointer;  
+      margin-bottom: 10px;  
+      display: inline-block;  
+      touch-action: manipulation;  
+    }  
+    .warmup-chips {  
+      display: none;  
+      flex-wrap: wrap;  
+      gap: 6px;  
+      margin-bottom: 10px;  
+    }  
+    .warmup-chips.open {  
+      display: flex;  
+    }  
+    .w-chip {  
+      background: var(--card-elevated);  
+      border: 1px solid var(--border);  
+      padding: 5px 9px;  
+      border-radius: 8px;  
+      font-size: 11.5px;  
+      font-weight: 700;  
+      color: var(--text);  
+    }  
+  
+    .sets-row {  
+      display: flex;  
+      flex-wrap: wrap;  
+      gap: 8px;  
+    }  
+    .set-pill {  
+      flex: 1;  
+      min-width: 72px;  
+      background: var(--card-elevated);  
+      border: 1px solid var(--border);  
+      color: var(--text);  
+      padding: 10px 6px;  
+      border-radius: 10px;  
+      font-size: 12px;  
+      font-weight: 700;  
+      text-align: center;  
+      cursor: pointer;  
+      touch-action: manipulation;  
+    }  
+    .set-pill:active {  
+      transform: scale(0.96);  
+    }  
+    .set-pill.checked {  
+      background: var(--green);  
+      border-color: var(--green);  
+      color: #000;  
+    }  
+  
+    .day-notes-card {  
+      background: var(--card);  
+      border: 1px solid var(--border);  
+      border-radius: 16px;  
+      padding: 14px;  
+      margin-top: 6px;  
+      margin-bottom: 16px;  
+    }  
+    .day-notes-card label {  
+      display: block;  
+      font-size: 13px;  
+      font-weight: 700;  
+      margin-bottom: 8px;  
+    }  
+    .day-notes-card textarea {  
+      width: 100%;  
+      min-height: 76px;  
+      background: var(--card-elevated);  
+      border: 1px solid var(--border);  
+      border-radius: 10px;  
+      padding: 10px;  
+      color: var(--text);  
+      font-size: 13px;  
+      resize: vertical;  
+      outline: none;  
+    }  
+  
+    .section-card {  
+      background: var(--card);  
+      border: 1px solid var(--border);  
+      border-radius: 16px;  
+      padding: 16px;  
+      margin-bottom: 14px;  
+    }  
+    .section-card h3 {  
+      font-size: 16px;  
+      font-weight: 800;  
+      margin-bottom: 10px;  
+    }  
+    .data-table {  
+      width: 100%;  
+      border-collapse: collapse;  
+      font-size: 13px;  
+    }  
+    .data-table th, .data-table td {  
+      padding: 9px 6px;  
+      text-align: left;  
+      border-bottom: 1px solid var(--border);  
+    }  
+    .data-table th {  
+      color: var(--text-sec);  
+      font-size: 11px;  
+      text-transform: uppercase;  
+    }  
+    .cue-list {  
+      list-style: none;  
+    }  
+    .cue-list li {  
+      font-size: 13px;  
+      color: var(--text-sec);  
+      margin-bottom: 8px;  
+      padding-left: 12px;  
+      position: relative;  
+    }  
+    .cue-list li strong {  
+      color: var(--text);  
+    }  
+    .cue-list li::before {  
+      content: "•";  
+      color: var(--accent);  
+      position: absolute;  
+      left: 0;  
+      font-weight: bold;  
+    }  
+  
+    .timer-bar {  
+      position: fixed;  
+      bottom: calc(var(--safe-bottom) + 62px);  
+      left: 12px;  
+      right: 12px;  
+      max-width: 516px;  
+      margin: 0 auto;  
+      background: rgba(26, 26, 30, 0.95);  
+      backdrop-filter: blur(16px);  
+      -webkit-backdrop-filter: blur(16px);  
+      border: 1px solid var(--border);  
+      border-radius: 16px;  
+      padding: 10px 14px;  
+      display: flex;  
+      justify-content: space-between;  
+      align-items: center;  
+      z-index: 90;  
+      box-shadow: 0 8px 24px rgba(0,0,0,0.65);  
+    }  
+    .timer-display {  
+      font-size: 20px;  
+      font-weight: 800;  
+      font-variant-numeric: tabular-nums;  
+    }  
+    .timer-display.active-timer {  
+      color: var(--green);  
+    }  
+    .timer-btns {  
+      display: flex;  
+      gap: 6px;  
+    }  
+    .t-btn {  
+      background: var(--card-elevated);  
+      border: 1px solid var(--border);  
+      color: var(--text);  
+      padding: 7px 10px;  
+      border-radius: 8px;  
+      font-size: 12px;  
+      font-weight: 700;  
+      cursor: pointer;  
+      touch-action: manipulation;  
+    }  
+    .t-btn.stop {  
+      background: var(--accent-soft);  
+      color: var(--accent);  
+      border-color: transparent;  
+    }  
+  
+    .tab-bar {  
+      position: fixed;  
+      bottom: 0;  
+      left: 0;  
+      right: 0;  
+      height: calc(58px + var(--safe-bottom));  
+      padding-bottom: var(--safe-bottom);  
+      background: rgba(16, 16, 18, 0.94);  
+      backdrop-filter: blur(20px);  
+      -webkit-backdrop-filter: blur(20px);  
+      border-top: 1px solid var(--border);  
+      display: flex;  
+      justify-content: space-around;  
+      align-items: center;  
+      z-index: 100;  
+    }  
+    .tab-item {  
+      background: none;  
+      border: none;  
+      color: var(--text-sec);  
+      font-size: 11px;  
+      font-weight: 700;  
+      display: flex;  
+      flex-direction: column;  
+      align-items: center;  
+      gap: 2px;  
+      cursor: pointer;  
+      flex: 1;  
+      padding: 6px 0;  
+      touch-action: manipulation;  
+    }  
+    .tab-item.active {  
+      color: var(--accent);  
+    }  
+    .tab-icon {  
+      font-size: 18px;  
+    }  
+  
+    .view-panel { display: none; }  
+    .view-panel.active { display: block; }  
+  </style>  
+</head>  
+<body>  
+  
+  <header class="app-header">  
+    <div class="header-title">  
+      <h1>Цикл V2 · Perkins Wave</h1>  
+      <div class="save-status" id="save-indicator">● Память активна (Вариант А)</div>  
+    </div>  
+    <button type="button" class="icon-btn" id="btn-print">PDF / Печать</button>  
+  </header>  
+  
+  <main class="container">  
+    <!-- TAB 1: WORKOUTS -->  
+    <section id="view-workouts" class="view-panel active">  
+      <div class="segmented-row" id="week-tabs">  
+        <button type="button" class="seg-btn" data-week="W1">W1<span>Вкатка</span></button>  
+        <button type="button" class="seg-btn" data-week="W2">W2<span>Прайминг</span></button>  
+        <button type="button" class="seg-btn" data-week="W3">W3<span>Пик</span></button>  
+        <button type="button" class="seg-btn" data-week="W4">W4<span>Делид</span></button>  
+      </div>  
+  
+      <div class="segmented-row" id="day-tabs">  
+        <button type="button" class="seg-btn" data-day="D1">D1 · Пн<span>Light</span></button>  
+        <button type="button" class="seg-btn" data-day="D2">D2 · Вт<span>Ascending</span></button>  
+        <button type="button" class="seg-btn" data-day="D3">D3 · Чт<span>Пик S+B</span></button>  
+        <button type="button" class="seg-btn" data-day="D4">D4 · Сб<span>Пик Сумо</span></button>  
+      </div>  
+  
+      <div class="week-banner">  
+        <div class="week-banner-top">  
+          <span class="week-badge" id="banner-rpe">Поляризация</span>  
+          <span style="font-size:12px; color:var(--text-sec); font-weight:700;" id="banner-day-code">W1 · D1</span>  
+        </div>  
+        <h2 id="banner-title">Понедельник</h2>  
+        <p id="banner-desc">Описание дня</p>  
+        <div class="progress-wrap">  
+          <div class="progress-bar-bg">  
+            <div class="progress-bar-fill" id="day-progress-fill"></div>  
+          </div>  
+          <span class="progress-text" id="day-progress-text">0%</span>  
+        </div>  
+      </div>  
+  
+      <div id="exercises-list"></div>  
+  
+      <div class="day-notes-card">  
+        <label for="day-notes-input">📝 Заметки к тренировке (сохраняются автоматически):</label>  
+        <textarea id="day-notes-input" placeholder="Скорость штанги, самочувствие ТБС/локтей, реальный запас..."></textarea>  
+      </div>  
+    </section>  
+  
+    <!-- TAB 2: RPE & WARMUP CALCULATOR -->  
+    <section id="view-rpe" class="view-panel">  
+      <div class="section-card">  
+        <h3>Калькулятор разминки к топ-сету</h3>  
+        <p style="font-size:12px; color:var(--text-sec); margin-bottom:10px;">  
+          40%×5, 60%×3, 75%×2, 85%×1, 92%×1 от целевого топ-сингла (шаг 2.5 кг).  
+        </p>  
+        <div style="display:flex; gap:10px; margin-bottom:12px;">  
+          <input type="number" id="calc-input" value="145" step="2.5"  
+            style="flex:1; background:var(--card-elevated); border:1px solid var(--border); color:#fff; padding:10px 12px; border-radius:10px; font-size:16px; font-weight:700;">  
+          <button type="button" class="icon-btn" id="btn-calc">Рассчитать</button>  
+        </div>  
+        <div id="calc-output" style="display:flex; flex-wrap:wrap; gap:8px;"></div>  
+      </div>  
+  
+      <div class="section-card">  
+        <h3>Калибровка топ-сингла по RPE</h3>  
+        <table class="data-table">  
+          <thead>  
+            <tr>  
+              <th>Целевой RPE</th>  
+              <th>Присед (Чт)</th>  
+              <th>Жим 2 с (Чт)</th>  
+              <th>Тяга сумо (Сб)</th>  
+            </tr>  
+          </thead>  
+          <tbody>  
+            <tr><td><strong>RPE 7.0</strong></td><td>140.0 кг</td><td>110.0 кг</td><td>170.0 кг</td></tr>  
+            <tr><td><strong>RPE 8.0</strong></td><td>145.0 кг</td><td>112.5 кг</td><td>175.0 кг</td></tr>  
+            <tr><td><strong>RPE 8.5</strong></td><td>150.0 кг</td><td>115.0 кг</td><td>177.5 кг</td></tr>  
+            <tr><td><strong>RPE 9.0</strong></td><td>152.5 кг</td><td>117.5 кг</td><td>182.5 кг</td></tr>  
+          </tbody>  
+        </table>  
+      </div>  
+  
+      <div class="section-card">  
+        <h3>Принцип Станека и Перкинса (Вариант А)</h3>  
+        <ul class="cue-list">  
+          <li><strong>Понедельник (Light Priming):</strong> паузный присед ~63–65% (RPE 5) раскрывает ТБС и колени после выходных без накопления усталости.</li>  
+          <li><strong>Вторник (Ascending Sets):</strong> восходящие подходы (лесенка) в сумо и приседе. Только финальный сет доходит до RPE 7–7.5 — это взвинчивает тонус ЦНС к четвергу без траты гликогена.</li>  
+          <li><strong>Четверг и Суббота (Поляризация):</strong> тяжёлый сингл >90% + сброс на лёгкие скоростные бэк-оффы (72–76%). Никакой «серой зоны» 82–86%, которая сжигает поясницу без пояса.</li>  
+        </ul>  
+      </div>  
+    </section>  
+  
+    <!-- TAB 3: TECH CUES & MEMORY MANAGEMENT -->  
+    <section id="view-tech" class="view-panel">  
+      <div class="section-card">  
+        <h3>Управление памятью и Бэкап</h3>  
+        <p style="font-size:12px; color:var(--text-sec); margin-bottom:12px;">  
+          Все отмеченные подходы, вписанные килограммы, RPE и заметки автоматически сохраняются в `localStorage`.  
+        </p>  
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;">  
+          <button type="button" class="icon-btn" id="btn-export" style="background:var(--blue); border-color:var(--blue);">Скопировать бэкап</button>  
+          <button type="button" class="icon-btn" id="btn-import">Загрузить бэкап</button>  
+          <button type="button" class="icon-btn" id="btn-reset" style="background:var(--accent-soft); color:var(--accent); border-color:transparent;">Сбросить всё</button>  
+        </div>  
+        <textarea id="backup-textarea" placeholder="Поле для JSON-кода резервной копии..." style="width:100%; height:64px; background:var(--card-elevated); border:1px solid var(--border); color:#fff; border-radius:10px; padding:8px; font-size:11px;"></textarea>  
+      </div>  
+  
+      <div class="section-card">  
+        <h3>Технические акценты True Raw</h3>  
+        <ul class="cue-list">  
+          <li><strong>Присед без пояса и наколенников:</strong> вдох в живот на 360°, рёбра строго над тазом, спуск 2 с под контролем, опора на 3 точки стопы в штангетках.</li>  
+          <li><strong>Поляризованные бэк-оффы (72–76%):</strong> вес лёгкий, поэтому каждый повтор выстреливается с максимальным ускорением как сингл на 95%.</li>  
+          <li><strong>Узкий жим (D1):</strong> хват на 1–1.5 ладони уже соревновательного, обязательная мягкая пауза 0.5–1 с на груди (без отбива, бережём локти и брахиалис).</li>  
+          <li><strong>Тяга сумо (локаут):</strong> выборка слабины грифа до включения рук, раздвигаем пол стопами. После коленей — мощная подача таза к грифу, фиксация 1 с.</li>  
+        </ul>  
+      </div>  
+    </section>  
+  </main>  
+  
+  <!-- Floating Rest Timer -->  
+  <div class="timer-bar">  
+    <div>  
+      <span style="font-size:10px; color:var(--text-sec); text-transform:uppercase; display:block;">Таймер отдыха</span>  
+      <div class="timer-display" id="timer-val">00:00</div>  
+    </div>  
+    <div class="timer-btns">  
+      <button type="button" class="t-btn" data-sec="90">1:30</button>  
+      <button type="button" class="t-btn" data-sec="180">3:00</button>  
+      <button type="button" class="t-btn" data-sec="240">4:00</button>  
+      <button type="button" class="t-btn stop" id="btn-timer-stop">Сброс</button>  
+    </div>  
+  </div>  
+  
+  <!-- Bottom Navigation -->  
+  <nav class="tab-bar">  
+    <button type="button" class="tab-item active" data-view="workouts">  
+      <span class="tab-icon">🏋️‍♂️</span>  
+      <span>Волна W1–W4</span>  
+    </button>  
+    <button type="button" class="tab-item" data-view="rpe">  
+      <span class="tab-icon">⚡</span>  
+      <span>Разминка & RPE</span>  
+    </button>  
+    <button type="button" class="tab-item" data-view="tech">  
+      <span class="tab-icon">💾</span>  
+      <span>База & Память</span>  
+    </button>  
+  </nav>  
+  
+  <script>  
+    const SafeStorage = {  
+      mem: {},  
+      get(key, fallback) {  
+        try {  
+          const val = window.localStorage.getItem(key);  
+          return val !== null ? JSON.parse(val) : fallback;  
+        } catch (e) {  
+          return this.mem[key] !== undefined ? this.mem[key] : fallback;  
+        }  
+      },  
+      set(key, value) {  
+        this.mem[key] = value;  
+        try {  
+          window.localStorage.setItem(key, JSON.stringify(value));  
+          flashSaveIndicator("● Сохранено в память ✓");  
+        } catch (e) {  
+          flashSaveIndicator("● Временный режим (открой через GitHub/Safari)");  
+        }  
+      },  
+      clearAll() {  
+        this.mem = {};  
+        try { window.localStorage.clear(); } catch (e) {}  
+      }  
+    };  
+  
+    function flashSaveIndicator(msg) {  
+      const el = document.getElementById('save-indicator');  
+      if (!el) return;  
+      el.textContent = msg;  
+      el.style.color = "#30D158";  
+    }  
+  
+    const programData = {  
+      W1: {  
+        rpe: "W1 · Вкатка (Поляризация)",  
+        desc: "Восходящая волна: Пн (Light) → Вт (Ascending) → Чт (Пик Присед/Жим) → Сб (Пик Сумо).",  
+        days: {  
+          D1: {  
+            title: "Пн · Light Присед (пауза) + Узкий жим лесенкой",  
+            exercises: [  
+              { name: "Присед с паузой 2 с (Light Priming)", tag: "Light ~63%", tagType: "tag-bo", sets: 3, reps: "3", kg: 95, pct: "63%", rpe: "5", note: "Раскрываем ТБС и колени после выходных. Пауза 2 с в яме и взрывной подъём." },  
+              { name: "Узкий жим (пауза 0.5–1 с · Лесенка)", tag: "Ascending", tagType: "tag-asc", sets: 3, reps: "5", kg: "75→80→85", setLabels: ["75 кг × 5", "80 кг × 5", "85 кг × 5"], pct: "65–74%", rpe: "5→6.5", note: "Восходящая лесенка. Мягкая фиксация на груди без отбива." },  
+              { name: "Тяга гантели с упором грудью", tag: "Спина", tagType: "tag-acc", sets: 3, reps: "8", kg: "По RPE", pct: "—", rpe: "7", note: "Чистое сведение лопатки без раскачки." },  
+              { name: "Suitcase Carry (на сторону)", tag: "Кор / Гиря", tagType: "tag-acc", sets: 3, reps: "20 м", kg: 24, pct: "—", rpe: "—", note: "Плечи строго ровно, короткий шаг." }  
+            ]  
+          },  
+          D2: {  
+            title: "Вт · Сумо и Присед (Восходящие сеты)",  
+            exercises: [  
+              { name: "Тяга сумо (Ascending Sets)", tag: "Лесенка", tagType: "tag-asc", sets: 3, reps: "3", kg: "140→150→160", setLabels: ["140 кг × 3", "150 кг × 3", "160 кг × 3"], pct: "74→84%", rpe: "5.5→7", note: "Только 3-й подход доходит до 160 кг (@7). Прайминг без закисления." },  
+              { name: "Присед лоу-бар (Ascending Sets)", tag: "Лесенка", tagType: "tag-asc", sets: 3, reps: "4", kg: "105→112.5→120", setLabels: ["105 кг × 4", "112.5 кг × 4", "120 кг × 4"], pct: "68→77%", rpe: "5.5→6.5", note: "Неврологическая подводка к четверговому пику." },  
+              { name: "Heavy Swings двумя руками (или Pull-Through)", tag: "Локаут", tagType: "tag-acc", sets: 4, reps: "8", kg: 24, pct: "—", rpe: "—", note: "Мощный выстрел тазом и сжатие ягодиц наверху." },  
+              { name: "Гиперэкстензия 45° (пауза 2 с)", tag: "Разгибатели", tagType: "tag-acc", sets: 3, reps: "8", kg: "Вес тела", pct: "—", rpe: "—", note: "Фиксация 2 с в нейтрали." },  
+              { name: "Bottoms-up Press (на сторону)", tag: "Стабилизация", tagType: "tag-acc", sets: 3, reps: "5", kg: 12, pct: "—", rpe: "—", note: "Гиря дном вверх, центрируем плечо." }  
+            ]  
+          },  
+          D3: {  
+            title: "Чт · Тяжёлый Пик: Присед + Жим (Поляризация)",  
+            exercises: [  
+              { name: "Присед лоу-бар · Топ-сет", tag: "Топ-сингл", tagType: "tag-top", sets: 1, reps: "1", kg: 140, pct: "88%", rpe: "7", note: "Снимаем сливки с прайминга Пн–Вт. Мощный брейс 360°.", isTop: true },  
+              { name: "Присед · Поляризованные бэк-оффы", tag: "Speed 72%", tagType: "tag-bo", sets: 3, reps: "4", kg: 112.5, pct: "72%", rpe: "5.5–6", note: "Никакой серой зоны! Вес лёгкий — выстреливаем каждый повтор, бережём спину к Сб." },  
+              { name: "Жим с паузой 2 с · Топ-сет", tag: "Топ-сингл", tagType: "tag-top", sets: 1, reps: "1", kg: 110, pct: "90%", rpe: "7", note: "Чёткий отсчёт «раз-два» на груди.", isTop: true },  
+              { name: "Жим 2 с · Поляризованные бэк-оффы", tag: "Speed 75%", tagType: "tag-bo", sets: 3, reps: "4", kg: 92.5, pct: "75%", rpe: "6", note: "Быстрый чистый выжим без закисления локтей." },  
+              { name: "Тяга верхнего блока нейтральным хватом", tag: "Широчайшие", tagType: "tag-acc", sets: 3, reps: "8", kg: "По RPE", pct: "—", rpe: "7", note: "Лопатки вниз." },  
+              { name: "Лицевая тяга (резина/блок)", tag: "Плечи", tagType: "tag-acc", sets: 3, reps: "10", kg: "По RPE", pct: "—", rpe: "6", note: "Здоровье ротаторов." }  
+            ]  
+          },  
+          D4: {  
+            title: "Сб · Тяжёлый Пик: Сумо + Скоростной Жим",  
+            exercises: [  
+              { name: "Тяга сумо · Топ-сет", tag: "Топ-сингл", tagType: "tag-top", sets: 1, reps: "1", kg: 170, pct: "89%", rpe: "7", note: "Свежая поясница. Выборка слабины и жёсткий локаут 1 с.", isTop: true },  
+              { name: "Тяга сумо · Поляризованные бэк-оффы", tag: "Speed 75%", tagType: "tag-bo", sets: 2, reps: "3", kg: 142.5, pct: "75%", rpe: "5.5", note: "Взрывная скорость и вбивание таза к грифу без перегруза ЦНС." },  
+              { name: "Жим с паузой 2 с (Light Speed)", tag: "Light 73%", tagType: "tag-bo", sets: 4, reps: "3", kg: 90, pct: "73%", rpe: "5", note: "Идеальная пауза 2 с и максимальная скорость." },  
+              { name: "Горизонтальная тяга блока / Т-грифа", tag: "Верх спины", tagType: "tag-acc", sets: 3, reps: "8–10", kg: "По RPE", pct: "—", rpe: "7", note: "Укрепление широчайших под сумо." },  
+              { name: "Hip Thrust (ягодичный мост)", tag: "Локаут", tagType: "tag-acc", sets: 3, reps: "6", kg: "По RPE", pct: "—", rpe: "7", note: "Пауза в верхней точке." },  
+              { name: "Suitcase Carry (на сторону)", tag: "Кор / Гиря", tagType: "tag-acc", sets: 3, reps: "20 м", kg: 24, pct: "—", rpe: "—", note: "Корсет под True Raw." },  
+              { name: "Bottoms-up Press (на сторону)", tag: "Стабилизация", tagType: "tag-acc", sets: 2, reps: "5", kg: 12, pct: "—", rpe: "—", note: "2×5 на руку." }  
+            ]  
+          }  
+        }  
+      },  
+      W2: {  
+        rpe: "W2 · Накопление (Поляризация)",  
+        desc: "Топ-сеты растут на 2.5–5 кг, добавляется по 1 подходу в скоростных бэк-оффах.",  
+        days: {  
+          D1: {  
+            title: "Пн · Light Присед (пауза) + Узкий жим лесенкой",  
+            exercises: [  
+              { name: "Присед с паузой 2 с (Light Priming)", tag: "Light ~64%", tagType: "tag-bo", sets: 3, reps: "3", kg: 97.5, pct: "64%", rpe: "5", note: "Глубокий сед без подворота таза, пауза 2 с." },  
+              { name: "Узкий жим (пауза 0.5–1 с · Лесенка)", tag: "Ascending", tagType: "tag-asc", sets: 3, reps: "5", kg: "77.5→82.5→87.5", setLabels: ["77.5 кг × 5", "82.5 кг × 5", "87.5 кг × 5"], pct: "67–76%", rpe: "5.5→7", note: "Плавная лесенка, только 3-й подход рабочий." },  
+              { name: "Тяга гантели с упором грудью", tag: "Спина", tagType: "tag-acc", sets: 3, reps: "8", kg: "По RPE", pct: "—", rpe: "7", note: "Плотная работа широчайшей." },  
+              { name: "Suitcase Carry (на сторону)", tag: "Кор / Гиря", tagType: "tag-acc", sets: 3, reps: "30 м", kg: 24, pct: "—", rpe: "—", note: "Дистанция 30 м." }  
+            ]  
+          },  
+          D2: {  
+            title: "Вт · Сумо и Присед (Восходящие сеты)",  
+            exercises: [  
+              { name: "Тяга сумо (Ascending Sets)", tag: "Лесенка", tagType: "tag-asc", sets: 3, reps: "3", kg: "145→155→165", setLabels: ["145 кг × 3", "155 кг × 3", "165 кг × 3"], pct: "76→86%", rpe: "6→7.5", note: "Финальный сет 165×3 включает ЦНС без утомления поясницы." },  
+              { name: "Присед лоу-бар (Ascending Sets)", tag: "Лесенка", tagType: "tag-asc", sets: 3, reps: "4", kg: "107.5→115→122.5", setLabels: ["107.5 кг × 4", "115 кг × 4", "122.5 кг × 4"], pct: "70→79%", rpe: "6→7", note: "Подводка к 145 кг в четверг." },  
+              { name: "Banded Heavy Swings 24 кг + резина (или Pull-Through)", tag: "Локаут", tagType: "tag-acc", sets: 4, reps: "10", kg: "24 + рез.", pct: "—", rpe: "—", note: "Двумя руками с резинкой для пикового дожима ягодиц." },  
+              { name: "Гиперэкстензия 45° (пауза 2 с)", tag: "Разгибатели", tagType: "tag-acc", sets: 3, reps: "8", kg: "+5 кг", pct: "—", rpe: "—", note: "Пауза 2 с наверху." },  
+              { name: "Bottoms-up Press (на сторону)", tag: "Стабилизация", tagType: "tag-acc", sets: 3, reps: "6", kg: 12, pct: "—", rpe: "—", note: "3×6 на каждую сторону." }  
+            ]  
+          },  
+          D3: {  
+            title: "Чт · Тяжёлый Пик: Присед + Жим (Поляризация)",  
+            exercises: [  
+              { name: "Присед лоу-бар · Топ-сет", tag: "Топ-сингл", tagType: "tag-top", sets: 1, reps: "1", kg: 145, pct: "91%", rpe: "7.5–8", note: "Твой тестовый вес на разогретую волной ЦНС.", isTop: true },  
+              { name: "Присед · Поляризованные бэк-оффы", tag: "Speed 74%", tagType: "tag-bo", sets: 4, reps: "4", kg: 115, pct: "74%", rpe: "6", note: "4×4 с максимальным ускорением из ямы." },  
+              { name: "Жим с паузой 2 с · Топ-сет", tag: "Топ-сингл", tagType: "tag-top", sets: 1, reps: "1", kg: 112.5, pct: "92%", rpe: "8", note: "Шаг +2.5 кг к прошлой неделе.", isTop: true },  
+              { name: "Жим 2 с · Поляризованные бэк-оффы", tag: "Speed 77%", tagType: "tag-bo", sets: 4, reps: "4", kg: 95, pct: "77%", rpe: "6.5", note: "4×4 технично и взрывно." },  
+              { name: "Тяга верхнего блока нейтральным хватом", tag: "Широчайшие", tagType: "tag-acc", sets: 3, reps: "8", kg: "По RPE", pct: "—", rpe: "7", note: "Контроль лопаток." },  
+              { name: "Лицевая тяга (резина/блок)", tag: "Плечи", tagType: "tag-acc", sets: 3, reps: "10", kg: "По RPE", pct: "—", rpe: "6", note: "Ротаторы плеча." }  
+            ]  
+          },  
+          D4: {  
+            title: "Сб · Тяжёлый Пик: Сумо + Скоростной Жим",  
+            exercises: [  
+              { name: "Тяга сумо · Топ-сет", tag: "Топ-сингл", tagType: "tag-top", sets: 1, reps: "1", kg: 175, pct: "92%", rpe: "8", note: "Жёсткий брейс, подача таза к грифу.", isTop: true },  
+              { name: "Тяга сумо · Поляризованные бэк-оффы", tag: "Speed 76%", tagType: "tag-bo", sets: 3, reps: "3", kg: 145, pct: "76%", rpe: "6", note: "3×3 на идеальную скорость локаута." },  
+              { name: "Жим с паузой 2 с (Light Speed)", tag: "Light 75%", tagType: "tag-bo", sets: 4, reps: "3", kg: 92.5, pct: "75%", rpe: "5.5", note: "Скоростные тройки." },  
+              { name: "Горизонтальная тяга блока / Т-грифа", tag: "Верх спины", tagType: "tag-acc", sets: 3, reps: "8–10", kg: "По RPE", pct: "—", rpe: "7.5", note: "Плотный верх спины." },  
+              { name: "Hip Thrust (ягодичный мост)", tag: "Локаут", tagType: "tag-acc", sets: 3, reps: "6", kg: "По RPE", pct: "—", rpe: "7", note: "Фиксация наверху." },  
+              { name: "Suitcase Carry (на сторону)", tag: "Кор / Гиря", tagType: "tag-acc", sets: 3, reps: "30 м", kg: 24, pct: "—", rpe: "—", note: "30 м без наклона." },  
+              { name: "Bottoms-up Press (на сторону)", tag: "Стабилизация", tagType: "tag-acc", sets: 2, reps: "6", kg: 12, pct: "—", rpe: "—", note: "2×6 на руку." }  
+            ]  
+          }  
+        }  
+      },  
+      W3: {  
+        rpe: "W3 · Пик Блока (Поляризация)",  
+        desc: "Пиковые синглы цикла при чистых скоростных бэк-оффах без выгорания ЦНС.",  
+        days: {  
+          D1: {  
+            title: "Пн · Light Присед (пауза) + Узкий жим лесенкой",  
+            exercises: [  
+              { name: "Присед с паузой 2 с (Light Priming)", tag: "Light ~65%", tagType: "tag-bo", sets: 3, reps: "3", kg: 100, pct: "65%", rpe: "5.5", note: "Идеальная глубина и скорость перед пиковой неделей." },  
+              { name: "Узкий жим (пауза 0.5–1 с · Лесенка)", tag: "Ascending", tagType: "tag-asc", sets: 3, reps: "4", kg: "80→85→90", setLabels: ["80 кг × 4", "85 кг × 4", "90 кг × 4"], pct: "69–78%", rpe: "5.5→7", note: "Короткая лесенка по 4 повтора." },  
+              { name: "Тяга гантели с упором грудью", tag: "Спина", tagType: "tag-acc", sets: 3, reps: "8", kg: "По RPE", pct: "—", rpe: "7", note: "Без читинга." },  
+              { name: "Suitcase Carry (на сторону)", tag: "Кор / Гиря", tagType: "tag-acc", sets: 3, reps: "40 м", kg: 24, pct: "—", rpe: "—", note: "Дистанция 40 м." }  
+            ]  
+          },  
+          D2: {  
+            title: "Вт · Сумо и Присед (Восходящие сеты)",  
+            exercises: [  
+              { name: "Тяга сумо (Ascending Sets)", tag: "Лесенка", tagType: "tag-asc", sets: 3, reps: "3–2", kg: "145→155→165", setLabels: ["145 кг × 3", "155 кг × 3", "165 кг × 2"], pct: "76→86%", rpe: "5.5→7", note: "Последний сет — быстрая двойка 165×2 для свежести к субботе." },  
+              { name: "Присед лоу-бар (Ascending Sets)", tag: "Лесенка", tagType: "tag-asc", sets: 3, reps: "4–3", kg: "110→117.5→125", setLabels: ["110 кг × 4", "117.5 кг × 4", "125 кг × 3"], pct: "71→81%", rpe: "6→7", note: "Прайминг под 150 кг в четверг." },  
+              { name: "Banded Heavy Swings 24 кг + резина (или Pull-Through)", tag: "Локаут", tagType: "tag-acc", sets: 4, reps: "6–8", kg: "24 + рез.", pct: "—", rpe: "—", note: "Двумя руками, взрывной локаут." },  
+              { name: "Гиперэкстензия 45° (пауза 2 с)", tag: "Разгибатели", tagType: "tag-acc", sets: 3, reps: "8", kg: "+10 кг", pct: "—", rpe: "—", note: "Фиксация 2 с наверху." },  
+              { name: "Bottoms-up Press (на сторону)", tag: "Стабилизация", tagType: "tag-acc", sets: 3, reps: "4", kg: 16, pct: "—", rpe: "—", note: "Гиря 16 кг." }  
+            ]  
+          },  
+          D3: {  
+            title: "Чт · Тяжёлый Пик: Присед + Жим (Поляризация)",  
+            exercises: [  
+              { name: "Присед лоу-бар · Топ-сет", tag: "Пик-сингл", tagType: "tag-top", sets: 1, reps: "1", kg: 150, pct: "94%", rpe: "8.5", note: "При RPE ≤ 8 допустим 1 сингл 152.5 кг.", isTop: true },  
+              { name: "Присед · Поляризованные бэк-оффы", tag: "Speed 75%", tagType: "tag-bo", sets: 3, reps: "4", kg: 117.5, pct: "75%", rpe: "6", note: "3×4 легко и мощно, оставляем поясницу свежей к 182.5 кг в сумо." },  
+              { name: "Жим с паузой 2 с · Топ-сет", tag: "Пик-сингл", tagType: "tag-top", sets: 1, reps: "1", kg: 115, pct: "94%", rpe: "8.5", note: "При RPE ≤ 8 допустим 1 сингл 117.5 кг (макс +2.5 кг).", isTop: true },  
+              { name: "Жим 2 с · Поляризованные бэк-оффы", tag: "Speed 79%", tagType: "tag-bo", sets: 4, reps: "3", kg: 97.5, pct: "79%", rpe: "6.5", note: "4×3 с идеальной паузой и скоростью." },  
+              { name: "Тяга верхнего блока нейтральным хватом", tag: "Широчайшие", tagType: "tag-acc", sets: 3, reps: "8", kg: "По RPE", pct: "—", rpe: "7", note: "Стабилизация лопаток." },  
+              { name: "Лицевая тяга (резина/блок)", tag: "Плечи", tagType: "tag-acc", sets: 3, reps: "10", kg: "По RPE", pct: "—", rpe: "6", note: "Здоровье плеч." }  
+            ]  
+          },  
+          D4: {  
+            title: "Сб · Тяжёлый Пик: Сумо + Скоростной Жим",  
+            exercises: [  
+              { name: "Тяга сумо · Топ-сет", tag: "Пик-сингл", tagType: "tag-top", sets: 1, reps: "1", kg: 182.5, pct: "96%", rpe: "9", note: "При RPE ≤ 8.5 допустим 1 сингл 185 кг и стоп. 200 кг — после делида!", isTop: true },  
+              { name: "Тяга сумо · Поляризованные бэк-оффы", tag: "Speed 77%", tagType: "tag-bo", sets: 2, reps: "3", kg: 147.5, pct: "77%", rpe: "6", note: "2×3 на чистый локаут ягодицами." },  
+              { name: "Жим с паузой 2 с (Light Speed)", tag: "Light 75%", tagType: "tag-bo", sets: 4, reps: "3", kg: 92.5, pct: "75%", rpe: "5.5", note: "Быстрый подъём." },  
+              { name: "Горизонтальная тяга блока / Т-грифа", tag: "Верх спины", tagType: "tag-acc", sets: 3, reps: "8", kg: "По RPE", pct: "—", rpe: "7.5", note: "Жёсткий верх спины." },  
+              { name: "Hip Thrust (ягодичный мост)", tag: "Локаут", tagType: "tag-acc", sets: 3, reps: "6", kg: "По RPE", pct: "—", rpe: "7", note: "Дожим таза." },  
+              { name: "Suitcase Carry (на сторону)", tag: "Кор / Гиря", tagType: "tag-acc", sets: 3, reps: "40 м", kg: 24, pct: "—", rpe: "—", note: "40 м на каждую руку." },  
+              { name: "Bottoms-up Press (на сторону)", tag: "Стабилизация", tagType: "tag-acc", sets: 2, reps: "4", kg: 16, pct: "—", rpe: "—", note: "Гиря 16 кг." }  
+            ]  
+          }  
+        }  
+      },  
+      W4: {  
+        rpe: "W4 · Делид (RPE 5–6, −40% объёма)",  
+        desc: "Суперкомпенсация перед проходкой: веса лёгкие, движение взрывное. Вес не добавляем!",  
+        days: {  
+          D1: {  
+            title: "Пн · Делид: Паузный присед + Узкий жим",  
+            exercises: [  
+              { name: "Присед с паузой 2 с", tag: "Делид", tagType: "tag-bo", sets: 2, reps: "3", kg: 90, pct: "60%", rpe: "5", note: "Лёгкая мобилизация." },  
+              { name: "Узкий жим (пауза 0.5–1 с · Лесенка)", tag: "Делид", tagType: "tag-asc", sets: 2, reps: "4", kg: "75→80", setLabels: ["75 кг × 4", "80 кг × 4"], pct: "—", rpe: "5", note: "2 лёгких подхода." },  
+              { name: "Тяга гантели с упором грудью", tag: "Спина", tagType: "tag-acc", sets: 2, reps: "8", kg: "По RPE", pct: "—", rpe: "5–6", note: "Без утомления." },  
+              { name: "Suitcase Carry (на сторону)", tag: "Кор", tagType: "tag-acc", sets: 2, reps: "20 м", kg: 24, pct: "—", rpe: "—", note: "2×20 м." }  
+            ]  
+          },  
+          D2: {  
+            title: "Вт · Делид: Сумо + Присед",  
+            exercises: [  
+              { name: "Тяга сумо (Лесенка)", tag: "Делид", tagType: "tag-asc", sets: 2, reps: "3", kg: "135→145", setLabels: ["135 кг × 3", "145 кг × 3"], pct: "71→76%", rpe: "5", note: "Чистая скорость." },  
+              { name: "Присед лоу-бар", tag: "Делид", tagType: "tag-bo", sets: 2, reps: "3", kg: 105, pct: "68%", rpe: "5", note: "2×3." },  
+              { name: "Heavy Swings двумя руками", tag: "Локаут", tagType: "tag-acc", sets: 3, reps: "8", kg: 24, pct: "—", rpe: "—", note: "Без резины." },  
+              { name: "Гиперэкстензия 45°", tag: "Разгибатели", tagType: "tag-acc", sets: 2, reps: "8", kg: "Вес тела", pct: "—", rpe: "—", note: "2×8." },  
+              { name: "Bottoms-up Press (на сторону)", tag: "Стабилизация", tagType: "tag-acc", sets: 2, reps: "5", kg: 12, pct: "—", rpe: "—", note: "12 кг." }  
+            ]  
+          },  
+          D3: {  
+            title: "Чт · Делид: Тонус Приседа и Жима",  
+            exercises: [  
+              { name: "Присед лоу-бар · Топ-сингл", tag: "Делид", tagType: "tag-top", sets: 1, reps: "1", kg: 130, pct: "81%", rpe: "5.5", note: "Быстрый сингл.", isTop: true },  
+              { name: "Присед · Бэк-оффы", tag: "Делид", tagType: "tag-bo", sets: 2, reps: "3", kg: 110, pct: "71%", rpe: "5", note: "2×3." },  
+              { name: "Жим с паузой 2 с · Топ-сингл", tag: "Делид", tagType: "tag-top", sets: 1, reps: "1", kg: 105, pct: "86%", rpe: "5.5", note: "Лёгкий сингл.", isTop: true },  
+              { name: "Жим 2 с · Бэк-оффы", tag: "Делид", tagType: "tag-bo", sets: 2, reps: "3", kg: 90, pct: "73%", rpe: "5", note: "2×3." },  
+              { name: "Тяга верхнего блока", tag: "Широчайшие", tagType: "tag-acc", sets: 2, reps: "8", kg: "По RPE", pct: "—", rpe: "5–6", note: "2×8." },  
+              { name: "Лицевая тяга", tag: "Плечи", tagType: "tag-acc", sets: 2, reps: "10", kg: "По RPE", pct: "—", rpe: "5", note: "2×10." }  
+            ]  
+          },  
+          D4: {  
+            title: "Сб · Делид: Тонус Сумо + Скоростной Жим",  
+            exercises: [  
+              { name: "Тяга сумо · Топ-сингл", tag: "Делид", tagType: "tag-top", sets: 1, reps: "1", kg: 162.5, pct: "86%", rpe: "5.5", note: "Подводка к штурму 200 кг на следующей неделе.", isTop: true },  
+              { name: "Тяга сумо · Бэк-офф", tag: "Делид", tagType: "tag-bo", sets: 1, reps: "3", kg: 140, pct: "74%", rpe: "5", note: "1×3." },  
+              { name: "Жим с паузой 2 с (скорость)", tag: "Делид", tagType: "tag-bo", sets: 2, reps: "3", kg: 90, pct: "73%", rpe: "5", note: "2×3." },  
+              { name: "Горизонтальная тяга блока", tag: "Верх спины", tagType: "tag-acc", sets: 2, reps: "8", kg: "По RPE", pct: "—", rpe: "5–6", note: "2×8." },  
+              { name: "Hip Thrust", tag: "Локаут", tagType: "tag-acc", sets: 2, reps: "6", kg: "По RPE", pct: "—", rpe: "5–6", note: "2×6." },  
+              { name: "Suitcase Carry (на сторону)", tag: "Кор", tagType: "tag-acc", sets: 2, reps: "20 м", kg: 24, pct: "—", rpe: "—", note: "2×20 м." },  
+              { name: "Bottoms-up Press (на сторону)", tag: "Стабилизация", tagType: "tag-acc", sets: 2, reps: "5", kg: 12, pct: "—", rpe: "—", note: "2×5." }  
+            ]  
+          }  
+        }  
+      }  
+    };  
+  
+    let appState = SafeStorage.get('tr_v2_perkins_state', {  
+      week: 'W1',  
+      day: 'D1',  
+      checks: {},  
+      logs: {},  
+      notes: {},  
+      calcWeight: 145  
+    });  
+  
+    function saveState() {  
+      SafeStorage.set('tr_v2_perkins_state', appState);  
+    }  
+  
+    function round25(val) {  
+      return Math.round(val / 2.5) * 2.5;  
+    }  
+  
+    function getWarmupHTML(targetKg) {  
+      if (typeof targetKg !== 'number') return '';  
+      const steps = [  
+        { pct: 0.40, reps: 5 },  
+        { pct: 0.60, reps: 3 },  
+        { pct: 0.75, reps: 2 },  
+        { pct: 0.85, reps: 1 },  
+        { pct: 0.92, reps: 1 }  
+      ];  
+      return steps.map(s => `<span class="w-chip">${round25(targetKg * s.pct)} кг × ${s.reps}</span>`).join('');  
+    }  
+  
+    function renderApp() {  
+      const w = appState.week;  
+      const d = appState.day;  
+      const wData = programData[w];  
+      const dData = wData.days[d];  
+  
+      document.querySelectorAll('#week-tabs .seg-btn').forEach(btn => {  
+        const isAct = btn.getAttribute('data-week') === w;  
+        btn.classList.toggle('active', isAct);  
+        btn.classList.toggle('w-active', isAct);  
+      });  
+      document.querySelectorAll('#day-tabs .seg-btn').forEach(btn => {  
+        const isAct = btn.getAttribute('data-day') === d;  
+        btn.classList.toggle('active', isAct);  
+      });  
+  
+      document.getElementById('banner-rpe').textContent = wData.rpe;  
+      document.getElementById('banner-day-code').textContent = `${w} · ${d}`;  
+      document.getElementById('banner-title').textContent = dData.title;  
+      document.getElementById('banner-desc').textContent = wData.desc;  
+  
+      const listEl = document.getElementById('exercises-list');  
+      listEl.innerHTML = '';  
+  
+      let totalSets = 0;  
+      let doneSets = 0;  
+  
+      dData.exercises.forEach((ex, exIdx) => {  
+        totalSets += ex.sets;  
+        let exDoneCount = 0;  
+        let setsHTML = '';  
+  
+        for (let s = 1; s <= ex.sets; s++) {  
+          const setKey = `${w}_${d}_ex${exIdx}_s${s}`;  
+          const isChecked = !!appState.checks[setKey];  
+          if (isChecked) {  
+            doneSets++;  
+            exDoneCount++;  
+          }  
+          const pillLabel = ex.setLabels && ex.setLabels[s - 1]  
+            ? `Сет ${s}: ${ex.setLabels[s - 1]}`  
+            : `Сет ${s} · ${ex.reps}`;  
+          setsHTML += `<button type="button" class="set-pill ${isChecked ? 'checked' : ''}" data-setkey="${setKey}">${pillLabel}</button>`;  
+        }  
+  
+        const logKey = `${w}_${d}_ex${exIdx}`;  
+        const savedLog = appState.logs[logKey] || { kg: '', rpe: '' };  
+        const defaultKgPlaceholder = typeof ex.kg === 'number' ? ex.kg : ex.kg;  
+  
+        const allExDone = exDoneCount === ex.sets;  
+        const warmupSection = ex.isTop && typeof ex.kg === 'number' ? `  
+          <button type="button" class="warmup-toggle" data-wuid="wu-${exIdx}">⚡ Разминка к ${ex.kg} кг</button>  
+          <div class="warmup-chips" id="wu-${exIdx}">${getWarmupHTML(ex.kg)}</div>  
+        ` : '';  
+  
+        const card = document.createElement('div');  
+        card.className = `ex-card ${allExDone ? 'done-card' : ''}`;  
+        card.innerHTML = `  
+          <div class="ex-header">  
+            <div class="ex-title">${ex.name}</div>  
+            <span class="ex-tag ${ex.tagType}">${ex.tag}</span>  
+          </div>  
+          <div class="ex-metrics">  
+            <div class="metric-box">  
+              <span class="metric-label">План</span>  
+              <span class="metric-val">${ex.sets}×${ex.reps}</span>  
+            </div>  
+            <div class="metric-box">  
+              <span class="metric-label">Вес (кг)</span>  
+              <span class="metric-val highlight">${ex.kg}</span>  
+            </div>  
+            <div class="metric-box">  
+              <span class="metric-label">% Базы</span>  
+              <span class="metric-val">${ex.pct}</span>  
+            </div>  
+            <div class="metric-box">  
+              <span class="metric-label">План RPE</span>  
+              <span class="metric-val">${ex.rpe}</span>  
+            </div>  
+          </div>  
+          <div class="ex-note">${ex.note}</div>  
+          <div class="fact-log-row">  
+            <div class="fact-input-wrap">  
+              <label>Факт Кг:</label>  
+              <input type="text" inputmode="decimal" placeholder="${defaultKgPlaceholder}" value="${savedLog.kg}" data-logkey="${logKey}" data-field="kg">  
+            </div>  
+            <div class="fact-input-wrap">  
+              <label>Факт RPE:</label>  
+              <input type="text" inputmode="decimal" placeholder="${ex.rpe}" value="${savedLog.rpe}" data-logkey="${logKey}" data-field="rpe">  
+            </div>  
+          </div>  
+          ${warmupSection}  
+          <div class="sets-row">${setsHTML}</div>  
+        `;  
+        listEl.appendChild(card);  
+      });  
+  
+      const pctDone = totalSets > 0 ? Math.round((doneSets / totalSets) * 100) : 0;  
+      document.getElementById('day-progress-fill').style.width = `${pctDone}%`;  
+      document.getElementById('day-progress-text').textContent = `${pctDone}%`;  
+  
+      const dayNoteKey = `${w}_${d}`;  
+      document.getElementById('day-notes-input').value = appState.notes[dayNoteKey] || '';  
+    }  
+  
+    document.addEventListener('click', function(e) {  
+      const weekBtn = e.target.closest('[data-week]');  
+      if (weekBtn) {  
+        appState.week = weekBtn.getAttribute('data-week');  
+        saveState();  
+        renderApp();  
+        return;  
+      }  
+  
+      const dayBtn = e.target.closest('[data-day]');  
+      if (dayBtn) {  
+        appState.day = dayBtn.getAttribute('data-day');  
+        saveState();  
+        renderApp();  
+        return;  
+      }  
+  
+      const setBtn = e.target.closest('[data-setkey]');  
+      if (setBtn) {  
+        const k = setBtn.getAttribute('data-setkey');  
+        if (appState.checks[k]) {  
+          delete appState.checks[k];  
+        } else {  
+          appState.checks[k] = true;  
+        }  
+        saveState();  
+        renderApp();  
+        return;  
+      }  
+  
+      const wuBtn = e.target.closest('[data-wuid]');  
+      if (wuBtn) {  
+        const wuEl = document.getElementById(wuBtn.getAttribute('data-wuid'));  
+        if (wuEl) wuEl.classList.toggle('open');  
+        return;  
+      }  
+  
+      const tabBtn = e.target.closest('[data-view]');  
+      if (tabBtn) {  
+        const viewName = tabBtn.getAttribute('data-view');  
+        document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));  
+        document.getElementById(`view-${viewName}`).classList.add('active');  
+        document.querySelectorAll('.tab-item').forEach(b => b.classList.remove('active'));  
+        tabBtn.classList.add('active');  
+        window.scrollTo({ top: 0, behavior: 'smooth' });  
+        return;  
+      }  
+  
+      const timerBtn = e.target.closest('[data-sec]');  
+      if (timerBtn) {  
+        startTimer(parseInt(timerBtn.getAttribute('data-sec'), 10));  
+        return;  
+      }  
+    });  
+  
+    document.addEventListener('input', function(e) {  
+      const t = e.target;  
+      if (t.matches('[data-logkey]')) {  
+        const lk = t.getAttribute('data-logkey');  
+        const field = t.getAttribute('data-field');  
+        if (!appState.logs[lk]) appState.logs[lk] = { kg: '', rpe: '' };  
+        appState.logs[lk][field] = t.value;  
+        saveState();  
+      } else if (t.id === 'day-notes-input') {  
+        const dayNoteKey = `${appState.week}_${appState.day}`;  
+        appState.notes[dayNoteKey] = t.value;  
+        saveState();  
+      } else if (t.id === 'calc-input') {  
+        updateWarmupCalc();  
+      }  
+    });  
+  
+    function updateWarmupCalc() {  
+      const val = parseFloat(document.getElementById('calc-input').value) || 100;  
+      appState.calcWeight = val;  
+      saveState();  
+      document.getElementById('calc-output').innerHTML = getWarmupHTML(val);  
+    }  
+  
+    let timerInterval = null;  
+    let remainingSec = 0;  
+  
+    function formatTime(sec) {  
+      const m = String(Math.floor(sec / 60)).padStart(2, '0');  
+      const s = String(sec % 60).padStart(2, '0');  
+      return `${m}:${s}`;  
+    }  
+  
+    function startTimer(seconds) {  
+      clearInterval(timerInterval);  
+      remainingSec = seconds;  
+      const disp = document.getElementById('timer-val');  
+      disp.classList.add('active-timer');  
+      disp.textContent = formatTime(remainingSec);  
+  
+      timerInterval = setInterval(() => {  
+        remainingSec--;  
+        if (remainingSec <= 0) {  
+          clearInterval(timerInterval);  
+          disp.textContent = "ГОТОВ!";  
+          if (navigator.vibrate) navigator.vibrate([200, 100, 200]);  
+        } else {  
+          disp.textContent = formatTime(remainingSec);  
+        }  
+      }, 1000);  
+    }  
+  
+    document.getElementById('btn-timer-stop').addEventListener('click', function() {  
+      clearInterval(timerInterval);  
+      const disp = document.getElementById('timer-val');  
+      disp.classList.remove('active-timer');  
+      disp.textContent = "00:00";  
+    });  
+  
+    document.getElementById('btn-print').addEventListener('click', function() {  
+      window.print();  
+    });  
+  
+    document.getElementById('btn-calc').addEventListener('click', updateWarmupCalc);  
+  
+    document.getElementById('btn-export').addEventListener('click', function() {  
+      const area = document.getElementById('backup-textarea');  
+      const jsonStr = JSON.stringify(appState);  
+      area.value = jsonStr;  
+      area.select();  
+      if (navigator.clipboard) navigator.clipboard.writeText(jsonStr);  
+      flashSaveIndicator("● Бэкап скопирован ✓");  
+    });  
+  
+    document.getElementById('btn-import').addEventListener('click', function() {  
+      const area = document.getElementById('backup-textarea');  
+      try {  
+        const parsed = JSON.parse(area.value);  
+        if (parsed && parsed.week && parsed.day) {  
+          appState = parsed;  
+          saveState();  
+          renderApp();  
+          flashSaveIndicator("● Бэкап восстановлен ✓");  
+        }  
+      } catch (err) {  
+        alert("Ошибка формата JSON. Проверь скопированный текст.");  
+      }  
+    });  
+  
+    document.getElementById('btn-reset').addEventListener('click', function() {  
+      if (confirm("Точно очистить все сохранённые подходы, веса и заметки?")) {  
+        SafeStorage.clearAll();  
+        appState = { week: 'W1', day: 'D1', checks: {}, logs: {}, notes: {}, calcWeight: 145 };  
+        saveState();  
+        renderApp();  
+      }  
+    });  
+  
+    document.getElementById('calc-input').value = appState.calcWeight || 145;  
+    renderApp();  
+    updateWarmupCalc();  
+  </script>  
+</body>  
+</html>  
